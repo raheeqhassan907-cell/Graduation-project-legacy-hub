@@ -36,6 +36,7 @@
         </div>
     </div>
 
+    @auth
     <!-- AI Forecasting & Predictions Layer -->
     <div class="glass-panel" style="padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden; border: 1px solid rgba(30, 61, 115, 0.18);">
         <!-- Background decorative blur glow -->
@@ -78,6 +79,7 @@
             </div>
         </div>
     </div>
+    @endauth
 
     <!-- Dashboard Main Sections -->
     <div class="dashboard-sections">
