@@ -160,49 +160,107 @@
                     </div>
                 </div>
 
-                <!-- Enforced Student Role -->
-                <input type="hidden" name="role" value="student">
-
-                <!-- Student Fields Only -->
+                <!-- Role Selector -->
                 <div class="form-group">
-                    <label for="student_id">
-                        <span class="lang-ar">الرقم الجامعي *</span>
-                        <span class="lang-en">Student ID *</span>
+                    <label for="reg-role">
+                        <span class="lang-ar">نوع الحساب *</span>
+                        <span class="lang-en">Account Type *</span>
                     </label>
-                    <input type="text" name="student_id" id="student_id" class="form-control" required value="{{ old('student_id') }}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="student_dept">
-                        <span class="lang-ar">القسم الدراسي / التخصص *</span>
-                        <span class="lang-en">Department / Specialty *</span>
-                    </label>
-                    <select name="student_department" id="student_dept" class="form-control" required>
-                        <option value="" disabled {{ !old('student_department') ? 'selected' : '' }}>
-                            اختر القسم الدراسي... | Select Department...
-                        </option>
-                        <option value="طب و جراحة" {{ old('student_department') === 'طب و جراحة' ? 'selected' : '' }}>طب و جراحة | Medicine & Surgery</option>
-                        <option value="هندسة طبية" {{ old('student_department') === 'هندسة طبية' ? 'selected' : '' }}>هندسة طبية | Biomedical Engineering</option>
-                        <option value="هندسة اتصالات" {{ old('student_department') === 'هندسة اتصالات' ? 'selected' : '' }}>هندسة اتصالات | Telecommunications Engineering</option>
-                        <option value="هندسة الكترونيات" {{ old('student_department') === 'هندسة الكترونيات' ? 'selected' : '' }}>هندسة الكترونيات | Electronics Engineering</option>
-                        <option value="هندسة ميكاترونكس" {{ old('student_department') === 'هندسة ميكاترونكس' ? 'selected' : '' }}>هندسة ميكاترونكس | Mechatronics Engineering</option>
-                        <option value="تقنية معلومات" {{ old('student_department') === 'تقنية معلومات' ? 'selected' : '' }}>تقنية معلومات | Information Technology</option>
-                        <option value="ذكاء اصطناعي" {{ old('student_department') === 'ذكاء اصطناعي' ? 'selected' : '' }}>ذكاء اصطناعي | Artificial Intelligence</option>
-                        <option value="هندسة برمجيات" {{ old('student_department') === 'هندسة برمجيات' ? 'selected' : '' }}>هندسة برمجيات | Software Engineering</option>
-                        <option value="دبلوم تقنية معلومات" {{ old('student_department') === 'دبلوم تقنية معلومات' ? 'selected' : '' }}>دبلوم تقنية معلومات | IT Diploma</option>
-                        <option value="ادارة اعمال" {{ old('student_department') === 'ادارة اعمال' ? 'selected' : '' }}>ادارة اعمال | Business Administration</option>
-                        <option value="اقتصاد" {{ old('student_department') === 'اقتصاد' ? 'selected' : '' }}>اقتصاد | Economics</option>
-                        <option value="وسائط الاعلام و الاتصال" {{ old('student_department') === 'وسائط الاعلام و الاتصال' ? 'selected' : '' }}>وسائط الاعلام و الاتصال | Media & Communication</option>
-                        <option value="دبلوم وسائط متعدده" {{ old('student_department') === 'دبلوم وسائط متعدده' ? 'selected' : '' }}>دبلوم وسائط متعدده | Multimedia Diploma</option>
-                        <option value="علوم تمريض" {{ old('student_department') === 'علوم تمريض' ? 'selected' : '' }}>علوم تمريض | Nursing Sciences</option>
-                        <option value="علوم مختبرات" {{ old('student_department') === 'علوم مختبرات' ? 'selected' : '' }}>علوم مختبرات | Laboratory Sciences</option>
-                        <option value="علاج طبيعي" {{ old('student_department') === 'علاج طبيعي' ? 'selected' : '' }}>علاج طبيعي | Physical Therapy</option>
+                    <select name="role" id="reg-role" class="form-control" onchange="toggleRoleFields()" required>
+                        <option value="student" {{ old('role') === 'student' || !old('role') ? 'selected' : '' }}>طالب | Student</option>
+                        <option value="professor" {{ old('role') === 'professor' ? 'selected' : '' }}>أستاذ مشرف | Professor/Supervisor</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
-                    <span class="lang-ar">إنشاء حساب طالب</span>
-                    <span class="lang-en">Register Student Account</span>
+                <!-- Student Fields -->
+                <div id="student-fields-group" style="display: block;">
+                    <div class="form-group">
+                        <label for="student_id">
+                            <span class="lang-ar">الرقم الجامعي *</span>
+                            <span class="lang-en">Student ID *</span>
+                        </label>
+                        <input type="text" name="student_id" id="student_id" class="form-control" value="{{ old('student_id') }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="student_dept">
+                            <span class="lang-ar">القسم الدراسي / التخصص *</span>
+                            <span class="lang-en">Department / Specialty *</span>
+                        </label>
+                        <select name="student_department" id="student_dept" class="form-control">
+                            <option value="" disabled {{ !old('student_department') ? 'selected' : '' }}>
+                                اختر القسم الدراسي... | Select Department...
+                            </option>
+                            <option value="طب و جراحة" {{ old('student_department') === 'طب و جراحة' ? 'selected' : '' }}>طب و جراحة | Medicine & Surgery</option>
+                            <option value="هندسة طبية" {{ old('student_department') === 'هندسة طبية' ? 'selected' : '' }}>هندسة طبية | Biomedical Engineering</option>
+                            <option value="هندسة اتصالات" {{ old('student_department') === 'هندسة اتصالات' ? 'selected' : '' }}>هندسة اتصالات | Telecommunications Engineering</option>
+                            <option value="هندسة الكترونيات" {{ old('student_department') === 'هندسة الكترونيات' ? 'selected' : '' }}>هندسة الكترونيات | Electronics Engineering</option>
+                            <option value="هندسة ميكاترونكس" {{ old('student_department') === 'هندسة ميكاترونكس' ? 'selected' : '' }}>هندسة ميكاترونكس | Mechatronics Engineering</option>
+                            <option value="تقنية معلومات" {{ old('student_department') === 'تقنية معلومات' ? 'selected' : '' }}>تقنية معلومات | Information Technology</option>
+                            <option value="ذكاء اصطناعي" {{ old('student_department') === 'ذكاء اصطناعي' ? 'selected' : '' }}>ذكاء اصطناعي | Artificial Intelligence</option>
+                            <option value="هندسة برمجيات" {{ old('student_department') === 'هندسة برمجيات' ? 'selected' : '' }}>هندسة برمجيات | Software Engineering</option>
+                            <option value="دبلوم تقنية معلومات" {{ old('student_department') === 'دبلوم تقنية معلومات' ? 'selected' : '' }}>دبلوم تقنية معلومات | IT Diploma</option>
+                            <option value="ادارة اعمال" {{ old('student_department') === 'ادارة اعمال' ? 'selected' : '' }}>ادارة اعمال | Business Administration</option>
+                            <option value="اقتصاد" {{ old('student_department') === 'اقتصاد' ? 'selected' : '' }}>اقتصاد | Economics</option>
+                            <option value="وسائط الاعلام و الاتصال" {{ old('student_department') === 'وسائط الاعلام و الاتصال' ? 'selected' : '' }}>وسائط الاعلام و الاتصال | Media & Communication</option>
+                            <option value="دبلوم وسائط متعدده" {{ old('student_department') === 'دبلوم وسائط متعدده' ? 'selected' : '' }}>دبلوم وسائط متعدده | Multimedia Diploma</option>
+                            <option value="علوم تمريض" {{ old('student_department') === 'علوم تمريض' ? 'selected' : '' }}>علوم تمريض | Nursing Sciences</option>
+                            <option value="علوم مختبرات" {{ old('student_department') === 'علوم مختبرات' ? 'selected' : '' }}>علوم مختبرات | Laboratory Sciences</option>
+                            <option value="علاج طبيعي" {{ old('student_department') === 'علاج طبيعي' ? 'selected' : '' }}>علاج طبيعي | Physical Therapy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Professor Fields -->
+                <div id="professor-fields-group" style="display: none;">
+                    <div class="form-group">
+                        <label for="professor_id">
+                            <span class="lang-ar">الرقم الوظيفي *</span>
+                            <span class="lang-en">Professor / Staff ID *</span>
+                        </label>
+                        <input type="text" name="professor_id" id="professor_id" class="form-control" value="{{ old('professor_id') }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">
+                            <span class="lang-ar">اللقب الأكاديمي * (مثال: د.، أ.د.، أستاذ مشارك)</span>
+                            <span class="lang-en">Academic Title * (e.g. Dr., Prof.)</span>
+                        </label>
+                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" placeholder="د. / Dr.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="professor_dept">
+                            <span class="lang-ar">القسم الأكاديمي *</span>
+                            <span class="lang-en">Academic Department *</span>
+                        </label>
+                        <select name="professor_department" id="professor_dept" class="form-control">
+                            <option value="" disabled {{ !old('professor_department') ? 'selected' : '' }}>
+                                اختر القسم الأكاديمي... | Select Department...
+                            </option>
+                            <option value="طب و جراحة" {{ old('professor_department') === 'طب و جراحة' ? 'selected' : '' }}>طب و جراحة | Medicine & Surgery</option>
+                            <option value="هندسة طبية" {{ old('professor_department') === 'هندسة طبية' ? 'selected' : '' }}>هندسة طبية | Biomedical Engineering</option>
+                            <option value="هندسة اتصالات" {{ old('professor_department') === 'هندسة اتصالات' ? 'selected' : '' }}>هندسة اتصالات | Telecommunications Engineering</option>
+                            <option value="هندسة الكترونيات" {{ old('professor_department') === 'هندسة الكترونيات' ? 'selected' : '' }}>هندسة الكترونيات | Electronics Engineering</option>
+                            <option value="هندسة ميكاترونكس" {{ old('professor_department') === 'هندسة ميكاترونكس' ? 'selected' : '' }}>هندسة ميكاترونكس | Mechatronics Engineering</option>
+                            <option value="تقنية معلومات" {{ old('professor_department') === 'تقنية معلومات' ? 'selected' : '' }}>تقنية معلومات | Information Technology</option>
+                            <option value="ذكاء اصطناعي" {{ old('professor_department') === 'ذكاء اصطناعي' ? 'selected' : '' }}>ذكاء اصطناعي | Artificial Intelligence</option>
+                            <option value="هندسة برمجيات" {{ old('professor_department') === 'هندسة برمجيات' ? 'selected' : '' }}>هندسة برمجيات | Software Engineering</option>
+                            <option value="دبلوم تقنية معلومات" {{ old('professor_department') === 'دبلوم تقنية معلومات' ? 'selected' : '' }}>دبلوم تقنية معلومات | IT Diploma</option>
+                            <option value="ادارة اعمال" {{ old('professor_department') === 'ادارة اعمال' ? 'selected' : '' }}>ادارة اعمال | Business Administration</option>
+                            <option value="اقتصاد" {{ old('professor_department') === 'اقتصاد' ? 'selected' : '' }}>اقتصاد | Economics</option>
+                            <option value="وسائط الاعلام و الاتصال" {{ old('professor_department') === 'وسائط الاعلام و الاتصال' ? 'selected' : '' }}>وسائط الاعلام و الاتصال | Media & Communication</option>
+                            <option value="دبلوم وسائط متعدده" {{ old('professor_department') === 'دبلوم وسائط متعدده' ? 'selected' : '' }}>دبلوم وسائط متعدده | Multimedia Diploma</option>
+                            <option value="علوم تمريض" {{ old('professor_department') === 'علوم تمريض' ? 'selected' : '' }}>علوم تمريض | Nursing Sciences</option>
+                            <option value="علوم مختبرات" {{ old('professor_department') === 'علوم مختبرات' ? 'selected' : '' }}>علوم مختبرات | Laboratory Sciences</option>
+                            <option value="علاج طبيعي" {{ old('professor_department') === 'علاج طبيعي' ? 'selected' : '' }}>علاج طبيعي | Physical Therapy</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="reg-submit-btn">
+                    <span class="lang-ar">إنشاء حساب</span>
+                    <span class="lang-en">Register Account</span>
                 </button>
             </form>
         </div>
@@ -245,5 +303,44 @@
                 regForm.style.display = 'block';
             }
         }
+
+        function toggleRoleFields() {
+            const role = document.getElementById('reg-role').value;
+            const studentFields = document.getElementById('student-fields-group');
+            const professorFields = document.getElementById('professor-fields-group');
+
+            const studentIdInput = document.getElementById('student_id');
+            const studentDeptSelect = document.getElementById('student_dept');
+            
+            const professorIdInput = document.getElementById('professor_id');
+            const titleInput = document.getElementById('title');
+            const professorDeptSelect = document.getElementById('professor_dept');
+
+            if (role === 'student') {
+                studentFields.style.display = 'block';
+                professorFields.style.display = 'none';
+
+                studentIdInput.required = true;
+                studentDeptSelect.required = true;
+
+                professorIdInput.required = false;
+                titleInput.required = false;
+                professorDeptSelect.required = false;
+            } else if (role === 'professor') {
+                studentFields.style.display = 'none';
+                professorFields.style.display = 'block';
+
+                studentIdInput.required = false;
+                studentDeptSelect.required = false;
+
+                professorIdInput.required = true;
+                titleInput.required = true;
+                professorDeptSelect.required = true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleRoleFields();
+        });
     </script>
 @endsection

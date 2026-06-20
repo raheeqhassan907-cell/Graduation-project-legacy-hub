@@ -45,9 +45,12 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|string|in:student',
-            'student_id' => 'required|string|max:50',
-            'student_department' => 'required|string|in:طب و جراحة,هندسة طبية,هندسة اتصالات,هندسة الكترونيات,هندسة ميكاترونكس,تقنية معلومات,ذكاء اصطناعي,هندسة برمجيات,دبلوم تقنية معلومات,ادارة اعمال,اقتصاد,وسائط الاعلام و الاتصال,دبلوم وسائط متعدده,علوم تمريض,علوم مختبرات,علاج طبيعي',
+            'role' => 'required|string|in:student,professor',
+            'student_id' => 'required_if:role,student|nullable|string|max:50',
+            'student_department' => 'required_if:role,student|nullable|string|in:طب و جراحة,هندسة طبية,هندسة اتصالات,هندسة الكترونيات,هندسة ميكاترونكس,تقنية معلومات,ذكاء اصطناعي,هندسة برمجيات,دبلوم تقنية معلومات,ادارة اعمال,اقتصاد,وسائط الاعلام و الاتصال,دبلوم وسائط متعدده,علوم تمريض,علوم مختبرات,علاج طبيعي',
+            'professor_id' => 'required_if:role,professor|nullable|string|max:50',
+            'title' => 'required_if:role,professor|nullable|string|max:50',
+            'professor_department' => 'required_if:role,professor|nullable|string|in:طب و جراحة,هندسة طبية,هندسة اتصالات,هندسة الكترونيات,هندسة ميكاترونكس,تقنية معلومات,ذكاء اصطناعي,هندسة برمجيات,دبلوم تقنية معلومات,ادارة اعمال,اقتصاد,وسائط الاعلام و الاتصال,دبلوم وسائط متعدده,علوم تمريض,علوم مختبرات,علاج طبيعي',
         ];
 
         $messages = [
