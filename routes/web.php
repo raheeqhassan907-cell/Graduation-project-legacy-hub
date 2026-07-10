@@ -23,6 +23,8 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLoginRegister'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/register/verify', [AuthController::class, 'showRegisterVerifyForm'])->name('register.verify.show');
+Route::post('/register/verify', [AuthController::class, 'verifyRegisterCode'])->name('register.verify.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Password Reset Routes (Forgot Password)

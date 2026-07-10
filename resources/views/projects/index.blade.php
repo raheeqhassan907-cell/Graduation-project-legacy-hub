@@ -92,6 +92,11 @@
                 <div class="project-meta">
                     <span class="badge badge-specialty">{{ $project->specialty }}</span>
                     <span class="badge">{{ $project->year }}</span>
+                    @if($project->grade)
+                        <span class="badge" style="background: rgba(214, 48, 49, 0.08); color: var(--accent); border-color: rgba(214, 48, 49, 0.15); font-weight: 800;">
+                            {{ $project->grade }}
+                        </span>
+                    @endif
                 </div>
 
                 <p class="project-desc">{{ $project->description }}</p>

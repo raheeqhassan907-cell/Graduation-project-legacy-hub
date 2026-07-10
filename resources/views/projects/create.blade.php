@@ -66,22 +66,24 @@
                 <input type="text" name="title" id="title" class="form-control" placeholder="مثال: نظام إدارة الهوية الرقمية باستخدام البلوكشين" required value="{{ old('title') }}">
             </div>
 
-            <!-- Student Names Input (Up to 5) -->
+            <!-- Student Names & IDs Input (Up to 5) -->
             <div class="form-group">
                 <label>
-                    <span class="lang-ar">الخريجون المشاركون في المشروع (من 1 إلى 5 طلاب) *</span>
-                    <span class="lang-en">Participating Graduates (1 to 5 Students) *</span>
+                    <span class="lang-ar">الخريجون المشاركون في المشروع (من 1 إلى 5 طلاب مع الرقم الجامعي) *</span>
+                    <span class="lang-en">Participating Graduates (1 to 5 Students with ID) *</span>
                 </label>
                 <div id="student-names-container">
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج الأول" required value="{{ old('student_names.0') }}">
+                        <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج الأول" required style="flex: 2;" value="{{ old('student_names.0') }}">
+                        <input type="text" name="student_ids[]" class="form-control" placeholder="الرقم الجامعي" required style="flex: 1;" value="{{ old('student_ids.0') }}">
                         <button type="button" class="btn btn-secondary" onclick="addStudentField()" style="padding: 5px 15px; font-size: 1.1rem;">➕</button>
                     </div>
                     @if(old('student_names'))
                         @foreach(old('student_names') as $index => $oldName)
                             @if($index > 0)
                                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                    <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج" required value="{{ $oldName }}">
+                                    <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج" required style="flex: 2;" value="{{ $oldName }}">
+                                    <input type="text" name="student_ids[]" class="form-control" placeholder="الرقم الجامعي" required style="flex: 1;" value="{{ old('student_ids.'.$index) }}">
                                     <button type="button" class="btn btn-danger" onclick="removeStudentField(this)" style="padding: 5px 15px;">&times;</button>
                                 </div>
                             @endif
@@ -151,6 +153,22 @@
             </div>
 
             <div class="form-group">
+                <label for="grade">
+                    <span class="lang-ar">تقدير المشروع *</span><span class="lang-en">Project Grade *</span>
+                </label>
+                <select name="grade" id="grade" class="form-control" required>
+                    <option value="" disabled {{ !old('grade') ? 'selected' : '' }}>
+                        اختر التقدير... | Select Grade...
+                    </option>
+                    @foreach(['A+', 'A', 'B+', 'B', 'C+', 'C'] as $g)
+                        <option value="{{ $g }}" {{ old('grade') === $g ? 'selected' : '' }}>
+                            {{ $g }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="description">
                     <span class="lang-ar">وصف تفصيلي للمشروع *</span><span class="lang-en">Detailed Description *</span>
                 </label>
@@ -193,7 +211,7 @@
 
         function addStudentField() {
             const container = document.getElementById('student-names-container');
-            const currentFields = container.querySelectorAll('input').length;
+            const currentFields = container.querySelectorAll('input[name="student_names[]"]').length;
             
             if (currentFields >= 5) {
                 alert('يمكنك إضافة 5 خريجين كحد أقصى للمشروع الواحد.');
@@ -205,7 +223,8 @@
             div.style.gap = '10px';
             div.style.marginBottom = '10px';
             div.innerHTML = `
-                <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج" required>
+                <input type="text" name="student_names[]" class="form-control" placeholder="اسم الخريج" required style="flex: 2;">
+                <input type="text" name="student_ids[]" class="form-control" placeholder="الرقم الجامعي" required style="flex: 1;">
                 <button type="button" class="btn btn-danger" onclick="removeStudentField(this)" style="padding: 5px 15px; font-size: 1rem;">&times;</button>
             `;
             container.appendChild(div);

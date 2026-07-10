@@ -39,55 +39,89 @@ class ChatbotController extends Controller
         }
 
         // ==========================================
-        // LOCAL RULE-BASED FALLBACK ENGINE
+        // LOCAL RULE-BASED FALLBACK ENGINE (SMART OFFLINE AGENT)
         // ==========================================
 
         // 1. GREETINGS
         if (preg_match('/^(مرحبا|اهلان|اهلا|السلام|سلام|صباح|مساء|hello|hi|hey)/ui', $normalized)) {
-            $reply = "أهلاً بك في منصة **مركز إرث لمشاريع التخرج**! 👋\n\nأنا مساعدك الذكي، يمكنك سؤالي عن:\n📊 **تحليل المشاريع المضافة** ونسب التخصصات.\n🔮 **التنبؤات التقنية** والتوجهات المستقبلية.\n🔍 **البحث عن مشاريع** معينة (اكتب اسم المشروع أو التقنية).\n👨‍🏫 **المشرفين الأكاديميين** في المنصة.\n⚙️ **طريقة استخدام المنصة** وصلاحيات الحسابات.\n\nكيف يمكنني مساعدتك اليوم؟";
+            $reply = "أهلاً بك في منصة **مركز إرث لمشاريع التخرج**! 👋\n\nأنا مساعدك الأكاديمي الذكي، يمكنك سؤالي عن:\n📊 **تحليل المشاريع المضافة** ونسب التخصصات.\n🔮 **اقتراح أفكار مشاريع تخرج** وتنبؤات سوق العمل.\n🔍 **البحث عن مشاريع** (اكتب اسم مشروع أو تقنية مثل لارافل، Java، أو طب).\n👨‍🏫 **المشرفين الأكاديميين** في المنصة.\n⚙️ **طريقة استخدام المنصة** وصلاحيات الحسابات.\n\nكيف يمكنني مساعدتك اليوم؟";
             return response()->json([
                 'reply' => $this->appendAdminHint($reply)
             ]);
         }
 
-        // 2. PLATFORM DEVELOPER
-        if ($this->containsKeywords($normalized, ['مطور', 'برمج', 'صنع', 'من صمم', 'raheeq', 'رحيق', 'بريد المطور'])) {
+        // 2. PLATFORM DEFINITION & ABOUT
+        if ($this->containsKeywords($normalized, ['ما هي المنصة', 'ما هي منصة', 'شنو المنصة', 'تعريف المنصة', 'ما هو مركز إرث', 'مركز ارث', 'مركز إرث', 'المنصة دي بتعمل شنو', 'فايدتها شنو', 'شنو مركز إرث', 'المنصة دي حقت شنو'])) {
+            $reply = "🏫 **منصة مركز إرث لمشاريع التخرج (GP Legacy Hub):**\n\nهي مستودع رقمي علائقي ذكي مصمم خصيصاً لأرشفة وتوثيق مشاريع التخرج المتميزة بالكلية لمنع تكرار الأفكار وتسهيل التصفح.\n\n✨ **أبرز الميزات:**\n1. **أرشيف رقمي آمن**: يتيح رفع كتب المشاريع بصيغة PDF وتصفحها.\n2. **منتدى نقاش أكاديمي**: يربط الطلاب الحاليين بالخريجين والأساتذة المشرفين لطرح الأسئلة والحصول على إجابات وتوجيه.\n3. **محرك تنبؤ ذكي**: مدمج مع الذكاء الاصطناعي لابتكار أفكار مشاريع تخرج مخصصة وجديدة.";
+            return response()->json([
+                'reply' => $this->appendAdminHint($reply)
+            ]);
+        }
+
+        // 3. PLATFORM DEVELOPER
+        if ($this->containsKeywords($normalized, ['مطور', 'برمج', 'صنع', 'من صمم', 'raheeq', 'رحيق', 'بريد المطور', 'العمل المنصة', 'السواهو منو', 'سوى المنصة', 'برمجها منو', 'العملها منو'])) {
             $reply = "🛡️ **معلومات المطور:**\nتم تصميم وتطوير منصة **مركز إرث لمشاريع التخرج** بواسطة المبرمج المتميز:\n\n**الاسم:** Raheeq Hassan 👨‍💻\n**البريد الإلكتروني:** raheegohassan@gmail.com\n**التقنيات المستخدمة:** Laravel 11, SQLite/MySQL, Glassmorphic CSS System.";
             return response()->json([
                 'reply' => $this->appendAdminHint($reply)
             ]);
         }
 
-        // 3. ANALYSIS & STATS
-        if ($this->containsKeywords($normalized, ['حلل', 'تحليل', 'احصائيات', 'ارقام', 'نسبة', 'اكثر التخصصات', 'اكثر الاقسام', 'احصائيه'])) {
+        // 4. ANALYSIS & STATS
+        if ($this->containsKeywords($normalized, ['حلل', 'تحليل', 'احصائيات', 'ارقام', 'نسبة', 'اكثر التخصصات', 'اكثر الاقسام', 'احصائيه', 'الحاصل شنو', 'المنصة فيها شنو', 'فيها كم مشروع'])) {
             return response()->json([
                 'reply' => $this->appendAdminHint($this->generateAnalysisReply())
             ]);
         }
 
-        // 4. PREDICTIONS & FUTURE TRENDS
-        if ($this->containsKeywords($normalized, ['تنبأ', 'توقعات', 'تنبؤ', 'توقع', 'مستقبل', 'مستقبلا', 'قادم', 'مشاريع قادمة', 'تقنيات قادمة', 'ترند'])) {
+        // 5. PREDICTIONS, SUGGESTIONS & PROJECT IDEAS
+        if ($this->containsKeywords($normalized, ['تنبأ', 'توقعات', 'تنبؤ', 'توقع', 'مستقبل', 'مستقبلا', 'قادم', 'مشاريع قادمة', 'تقنيات قادمة', 'ترند', 'اقترح', 'اقتراح', 'افكار', 'أفكار', 'فكرة', 'فكره', 'مقترحات', 'قائمة مشاريع', 'مشاريع جديدة', 'عايز مشروع', 'داير مشروع', 'عايزة مشروع', 'عايزه مشروع', 'دايرة مشروع', 'مشاريع تخرج مقترحة', 'اديني فكرة', 'اديني فكره', 'عايزة فكرة', 'عايزه فكره', 'دير فكره'])) {
             return response()->json([
                 'reply' => $this->appendAdminHint($this->generatePredictionsReply())
             ]);
         }
 
-        // 5. HOW TO UPLOAD & PERMISSIONS
-        if ($this->containsKeywords($normalized, ['كيف ارفع', 'طريقة الرفع', 'رفع مشروع', 'اضافة مشروع', 'اضيف مشروع', 'صلاحية الرفع', 'مين يرفع'])) {
-            $reply = "🎓 **صلاحيات رفع مشاريع التخرج:**\n\nبناءً على التحديثات الأمنية والأكاديمية للمنصة:\n* **صلاحية رفع المشاريع حصرية لمدير النظام (Admin) فقط** لضمان دقة المرفقات وصحة البيانات الأكاديمية وكتاب التخرج المرفوع (صيغة PDF).\n* عند قيام المسؤول برفع مشروع، يقوم النظام **تلقائياً بإنشاء حسابات للخريجين المشاركين** (حتى 5 خريجين كحد أقصى) وتوليد بريد إلكتروني لهم مشتق من أسمائهم باللغة العربية بكلمة مرور افتراضية هي `password`.\n* يمكن للطلاب والخريجين والدكاترة تصفح المشاريع والبحث عنها وتحميل كتاب التخرج، وطرح الأسئلة ومناقشتها.";
+        // 6. HOW TO UPLOAD & PERMISSIONS
+        if ($this->containsKeywords($normalized, ['كيف ارفع', 'طريقة الرفع', 'رفع مشروع', 'اضافة مشروع', 'اضيف مشروع', 'صلاحية الرفع', 'مين يرفع', 'كيفن ارفع', 'برفعوه كيف'])) {
+            $reply = "🎓 **صلاحيات رفع مشاريع التخرج:**\n\nبناءً على التحديثات الأمنية والأكاديمية للمنصة:\n* **صلاحية رفع المشاريع حصرية لمدير النظام (Admin) فقط** لضمان دقة المرفقات وصحة البيانات الأكاديمية وكتاب التخرج المرفوع (صيغة PDF).\n* عند قيام المسؤول برفع مشروع, يقوم النظام **تلقائياً بإنشاء حسابات للخريجين المشاركين** (حتى 5 خريجين كحد أقصى) وتوليد بريد إلكتروني لهم مشتق من أسمائهم باللغة العربية بكلمة مرور افتراضية هي `password`.\n* يمكن للطلاب والخريجين والدكاترة تصفح المشاريع والبحث عنها وتحميل كتاب التخرج، وطرح الأسئلة ومناقشتها.";
             return response()->json([
                 'reply' => $this->appendAdminHint($reply)
             ]);
         }
 
-        // 6. SEARCH FOR SUPERVISORS
-        if ($this->containsKeywords($normalized, ['مشرف', 'مشرفين', 'دكتور', 'دكاتره', 'اساتذه', 'الاستاذ', 'الدكاترة'])) {
+        // 7. SEARCH FOR SUPERVISORS
+        if ($this->containsKeywords($normalized, ['مشرف', 'مشرفين', 'دكتور', 'دكاتره', 'اساتذه', 'الاستاذ', 'الدكاترة', 'بروف', 'نهلة', 'نهله', 'رشا', 'منال', 'نور الدين', 'محاسن', 'فاطمة', 'فاطمه', 'الدكاترة ديل منو', 'الأساتذة المشركين', 'الدكاتره المشركين'])) {
             return response()->json([
                 'reply' => $this->appendAdminHint($this->generateSupervisorsReply())
             ]);
         }
 
-        // 7. SPECIFIC PROJECT SEARCH (FALLBACK MATCHING)
+        // 8. DIRECT DEPARTMENT SPECIALTY MATCHING
+        if ($this->containsKeywords($normalized, ['تمريض', 'التمريض', 'nursing'])) {
+            $searchReply = $this->searchProjectsReply('علوم التمريض');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+        if ($this->containsKeywords($normalized, ['مختبرات', 'المختبرات', 'علوم المختبرات', 'laboratory', 'microbiology', 'احياء دقيقة', 'أحياء دقيقة', 'الاحياء الدقيقة'])) {
+            $searchReply = $this->searchProjectsReply('علوم المختبرات الطبية');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+        if ($this->containsKeywords($normalized, ['ادارة اعمال', 'إدارة أعمال', 'ادارة الاعمال', 'موارد بشرية', 'بشريه'])) {
+            $searchReply = $this->searchProjectsReply('إدارة الأعمال');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+        if ($this->containsKeywords($normalized, ['طب', 'الطب', 'جراحة', 'الجراحة', 'medicine'])) {
+            $searchReply = $this->searchProjectsReply('الطب والجراحة');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+        if ($this->containsKeywords($normalized, ['تقنية معلومات', 'it'])) {
+            $searchReply = $this->searchProjectsReply('تقنية معلومات');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+        if ($this->containsKeywords($normalized, ['علوم حاسوب', 'cs'])) {
+            $searchReply = $this->searchProjectsReply('علوم حاسوب');
+            if ($searchReply) return response()->json(['reply' => $this->appendAdminHint($searchReply)]);
+        }
+
+        // 9. SPECIFIC PROJECT SEARCH (FALLBACK MATCHING)
         $searchReply = $this->searchProjectsReply($message);
         if ($searchReply) {
             return response()->json([
@@ -95,8 +129,8 @@ class ChatbotController extends Controller
             ]);
         }
 
-        // 8. GENERAL FALLBACK
-        $reply = "عذراً، لم أفهم سؤالك تماماً. 🧐\n\nيمكنك سؤالي بشكل مباشر مثل:\n* *\"ما هي مشاريع الذكاء الاصطناعي؟\"*\n* *\"حلل لي مشاريع المنصة\"*\n* *\"تنبأ بالتقنيات المستقبلية\"*\n* *\"من هو مطور المنصة؟\"*\n* *\"كيف يتم رفع مشروع؟\"*";
+        // 10. GENERAL FALLBACK
+        $reply = "عذراً، لم أفهم سؤالك تماماً. 🧐\n\nيمكنك سؤالي بشكل مباشر مثل:\n* *\"ما هي مشاريع تقنية المعلومات؟\"*\n* *\"اقترح لي أفكار مشاريع تخرج\"*\n* *\"ما هو مركز إرث؟\"*\n* *\"حلل لي مشاريع المنصة\"*\n* *\"من هم الأساتذة المشرفين؟\"*";
         return response()->json([
             'reply' => $this->appendAdminHint($reply)
         ]);
@@ -132,9 +166,9 @@ class ChatbotController extends Controller
             "- خطط المنصة المستقبلية: نتنبأ بنمو تخصص الذكاء الاصطناعي بنسبة 35%، وتشمل خططنا إدراج محرك توظيف للخريجين، والتحليل التلقائي لكتب المشاريع باستخدام AI.\n\n" .
             "تستطيع الإجابة على أي سؤال يطرحه المستخدم (سواء كان يخص المنصة أو أسئلة علمية، تقنية، أكاديمية، عامة، إلخ) مستعيناً بهذه البيانات إذا لزم الأمر، ولديك الحرية الكاملة في صياغة الإجابة عن أي سؤال عام آخر خارج المنصة بذكاء وعمق.";
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
 
-        $response = Http::withHeaders([
+        $response = Http::timeout(4)->withHeaders([
             'Content-Type' => 'application/json'
         ])->post($url, [
             'contents' => [
@@ -761,9 +795,9 @@ class ChatbotController extends Controller
 
     private function queryGeminiDirect($prompt, $apiKey)
     {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
 
-        $response = Http::withHeaders([
+        $response = Http::timeout(4)->withHeaders([
             'Content-Type' => 'application/json'
         ])->post($url, [
             'contents' => [

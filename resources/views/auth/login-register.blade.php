@@ -69,7 +69,7 @@
             </div>
 
             <!-- Validation Errors for Tab -->
-            @if($errors->any() && (session('active_tab') === 'register' || session('active_tab') === 'login'))
+            @if($errors->any())
                 <div class="alert alert-danger" style="margin-bottom: 20px;">
                     <div>
                         @foreach($errors->all() as $error)
@@ -341,6 +341,9 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             toggleRoleFields();
+            @if($errors->any() && (session('active_tab') === 'register' || old('name')))
+                switchTab('register');
+            @endif
         });
     </script>
 @endsection

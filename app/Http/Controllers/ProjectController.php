@@ -89,12 +89,17 @@ class ProjectController extends Controller
             'technologies' => 'nullable|string|max:255',
             'year' => 'required|integer|min:1990|max:' . (date('Y') + 1),
             'supervisor_id' => 'required|exists:users,id', // MUST define supervisor
+            'grade' => 'required|string|in:A+,A,B+,B,C+,C',
             'file' => 'required|file|mimes:pdf|max:20480', // PDF up to 20MB
             'student_names' => 'required|array|min:1|max:5',
             'student_names.*' => 'required|string|max:255',
+            'student_ids' => 'required|array|min:1|max:5',
+            'student_ids.*' => 'required|string|max:50',
         ], [
             'supervisor_id.required' => 'يجب اختيار الأستاذ المشرف على المشروع.',
             'supervisor_id.exists' => 'المشرف المختار غير موجود.',
+            'grade.required' => 'يجب اختيار تقدير المشروع.',
+            'grade.in' => 'التقدير المختار غير صالح.',
             'file.required' => 'يجب رفع كتاب المشروع (ملف PDF).',
             'file.mimes' => 'يجب أن يكون الملف بصيغة PDF فقط.',
             'file.max' => 'حجم الملف يجب ألا يتجاوز 20 ميجابايت.',
@@ -102,12 +107,16 @@ class ProjectController extends Controller
             'student_names.min' => 'يجب إدخال اسم خريج واحد على الأقل.',
             'student_names.max' => 'يمكن إدخال 5 خريجين كحد أقصى للمشروع الواحد.',
             'student_names.*.required' => 'اسم الطالب لا يمكن أن يكون فارغاً.',
+            'student_ids.required' => 'يجب إدخال الرقم الجامعي للطلاب.',
+            'student_ids.*.required' => 'الرقم الجامعي للطالب لا يمكن أن يكون فارغاً.',
         ]);
 
         $studentIds = [];
-        foreach ($request->student_names as $name) {
+        foreach ($request->student_names as $index => $name) {
             $name = trim($name);
             if (empty($name)) continue;
+
+            $studentIdVal = trim($request->student_ids[$index] ?? '');
 
             // Check if user already exists
             $user = User::where('name', $name)->first();
@@ -115,15 +124,34 @@ class ProjectController extends Controller
                 // Generate clean unique email
                 $email = $this->generateUniqueEmail($name);
                 
+                // Set password to student_id (fallback to first name + 1234 if empty)
+                if (!empty($studentIdVal)) {
+                    $plainPassword = $studentIdVal;
+                } else {
+                    $emailParts = explode('@', $email);
+                    $namePrefix = $emailParts[0];
+                    $nameParts = explode('.', $namePrefix);
+                    $firstNameEn = $nameParts[0];
+                    $plainPassword = $firstNameEn . '1234';
+                }
+
                 // Auto create account
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'password' => bcrypt('password'), // default password
+                    'password' => bcrypt($plainPassword),
                     'role' => 'graduate',
+                    'student_id' => $studentIdVal,
                     'department' => $request->specialty,
                     'graduation_year' => $request->year,
                 ]);
+            } else {
+                // Update student_id and password if not set
+                if (empty($user->student_id) && !empty($studentIdVal)) {
+                    $user->student_id = $studentIdVal;
+                    $user->password = bcrypt($studentIdVal);
+                    $user->save();
+                }
             }
             $studentIds[] = $user->id;
         }
@@ -133,6 +161,7 @@ class ProjectController extends Controller
         $project->description = $request->description;
         $project->specialty = $request->specialty;
         $project->technologies = $request->technologies;
+        $project->grade = $request->grade;
         $project->year = $request->year;
         $project->supervisor_id = $request->supervisor_id;
         $project->graduate_id = !empty($studentIds) ? $studentIds[0] : null;
@@ -172,6 +201,10 @@ class ProjectController extends Controller
     }
 
     private function generateUniqueEmail($arabicName) {
+        $parts = array_filter(explode(' ', trim($arabicName)));
+        $twoWords = array_slice($parts, 0, 2);
+        $arabicName = implode(' ', $twoWords);
+
         $charMap = [
             'أ' => 'a', 'إ' => 'a', 'آ' => 'a', 'ا' => 'a',
             'ب' => 'b', 'ت' => 't', 'ث' => 'th', 'ج' => 'j',
@@ -193,11 +226,11 @@ class ProjectController extends Controller
             $clean = 'graduate';
         }
         
-        $email = $clean . '@erth.com';
+        $email = $clean . '@gmail.com';
         
         $counter = 1;
         while (User::where('email', $email)->exists()) {
-            $email = $clean . $counter . '@erth.com';
+            $email = $clean . $counter . '@gmail.com';
             $counter++;
         }
         

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['title', 'description', 'specialty', 'technologies', 'file_url', 'year', 'graduate_id', 'supervisor_id'])]
+#[Fillable(['title', 'description', 'specialty', 'technologies', 'file_url', 'year', 'graduate_id', 'supervisor_id', 'grade'])]
 class Project extends Model
 {
     use HasFactory;

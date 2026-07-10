@@ -20,6 +20,12 @@
                         <span class="lang-ar">السنة: {{ $project->year }}</span>
                         <span class="lang-en">Year: {{ $project->year }}</span>
                     </span>
+                    @if($project->grade)
+                        <span class="badge" style="font-size: 0.85rem; padding: 0.4rem 1rem; background: rgba(214, 48, 49, 0.08); color: var(--accent); border-color: rgba(214, 48, 49, 0.15); font-weight: 800;">
+                            <span class="lang-ar">التقدير: {{ $project->grade }}</span>
+                            <span class="lang-en">Grade: {{ $project->grade }}</span>
+                        </span>
+                    @endif
                 </div>
             </div>
             
