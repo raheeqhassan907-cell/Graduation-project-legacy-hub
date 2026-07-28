@@ -73,6 +73,18 @@
             </select>
         </div>
 
+        <div class="filter-item">
+            <label for="grade">
+                <span class="lang-ar">التقدير الحاصل عليه</span><span class="lang-en">Project Grade</span>
+            </label>
+            <select name="grade" id="grade" class="form-control">
+                <option value=""><span class="lang-ar">كل التقديرات</span><span class="lang-en">All Grades</span></option>
+                @foreach($grades as $grd)
+                    <option value="{{ $grd }}" {{ request('grade') === $grd ? 'selected' : '' }}>{{ $grd }}</option>
+                @endforeach
+            </select>
+        </div>
+
         <div style="display: flex; gap: 10px; grid-column: 1 / -1; justify-content: flex-end;">
             <button type="submit" class="btn btn-primary" style="padding: 8px 25px;">
                 <span class="lang-ar">تطبيق الفلاتر</span><span class="lang-en">Apply Filters</span>

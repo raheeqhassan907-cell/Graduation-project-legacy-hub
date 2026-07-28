@@ -46,6 +46,10 @@ class ProjectController extends Controller
             $query->where('technologies', 'like', "%{$request->technology}%");
         }
 
+        if ($request->filled('grade')) {
+            $query->where('grade', $request->grade);
+        }
+
         $projects = $query->latest()->get();
 
         // Get distinct data for filtering UI
@@ -55,8 +59,9 @@ class ProjectController extends Controller
         $technologies = Project::pluck('technologies')->filter()->flatMap(function($item) {
             return array_map('trim', explode(',', $item));
         })->unique()->filter()->values();
+        $grades = Project::distinct()->pluck('grade')->filter()->values();
 
-        return view('projects.index', compact('projects', 'specialties', 'years', 'supervisors', 'technologies'));
+        return view('projects.index', compact('projects', 'specialties', 'years', 'supervisors', 'technologies', 'grades'));
     }
 
     public function show($id)
