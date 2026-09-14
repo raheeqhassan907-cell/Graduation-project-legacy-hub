@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: earth-grad-projects:latest
+    container_name: earth_grad_platform
+    restart: always
+    ports:
+      - "${PORT:-80}:80"
+    environment:
+      - APP_NAME=مركز إرث لمشاريع التخرج
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=base64:4TBPpJPR+SWHYXlpP5G3+LAJIsz4L/w+aqJHELKO9eQ=
+      - APP_URL=http://141.140.0.187
+      - DB_CONNECTION=sqlite
+      - DB_DATABASE=/var/www/html/database/database.sqlite
+      - SESSION_DRIVER=file
+      - SESSION_LIFETIME=120
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=raheegohassan@gmail.com
+      - MAIL_PASSWORD=fznaykaxeolvarxw
+      - MAIL_ENCRYPTION=tls
+      - MAIL_FROM_ADDRESS=raheegohassan@gmail.com
+      - MAIL_FROM_NAME=مركز إرث لمشاريع التخرج
+    volumes:
+      - ./database:/var/www/html/database
+      - ./storage/app/public:/var/www/html/storage/app/public
+      - ./storage/logs:/var/www/html/storage/logs

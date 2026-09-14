@@ -36,50 +36,64 @@
         </div>
     </div>
 
-    @auth
-    <!-- AI Forecasting & Predictions Layer -->
-    <div class="glass-panel" style="padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden; border: 1px solid rgba(30, 61, 115, 0.18);">
+    @if(Auth::check() && Auth::user()->isStudent())
+    <!-- AI Forecasting & Predictions Layer (Exclusive to Students) -->
+    <div class="glass-panel" style="padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden; border: 1px solid rgba(30, 61, 115, 0.2); box-shadow: 0 8px 32px rgba(30, 61, 115, 0.08);">
         <!-- Background decorative blur glow -->
-        <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: rgba(30, 61, 115, 0.12); filter: blur(40px); border-radius: 50%;"></div>
-        <div style="position: absolute; bottom: -50px; right: -50px; width: 150px; height: 150px; background: rgba(214, 48, 49, 0.05); filter: blur(40px); border-radius: 50%;"></div>
+        <div style="position: absolute; top: -50px; left: -50px; width: 160px; height: 160px; background: rgba(30, 61, 115, 0.12); filter: blur(40px); border-radius: 50%;"></div>
+        <div style="position: absolute; bottom: -50px; right: -50px; width: 160px; height: 160px; background: rgba(214, 48, 49, 0.06); filter: blur(40px); border-radius: 50%;"></div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border-glass); padding-bottom: 15px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 2.2rem; filter: drop-shadow(0 2px 8px rgba(30,61,115,0.2));">🔮</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; border-bottom: 1px solid var(--border-glass); padding-bottom: 18px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <span style="font-size: 2.4rem; filter: drop-shadow(0 2px 8px rgba(30,61,115,0.25));">🔮</span>
                 <div>
-                    <h3 style="margin: 0; color: var(--primary); font-size: 1.3rem;" class="lang-ar">محرك التنبؤ والتحليل الذكي للمستقبل (AI Future Trends)</h3>
-                    <h3 style="margin: 0; color: var(--primary); font-size: 1.3rem;" class="lang-en">AI Future Trends & Predictions Engine</h3>
-                    <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);" class="lang-ar">تنبأ بالاتجاهات المستقبلية للمشاريع والتقنيات بناءً على بيانات سوق العمل والكلية الحالية.</p>
-                    <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-secondary);" class="lang-en">Predict future graduation projects and tech stacks based on live market analysis.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+                        <h3 style="margin: 0; color: var(--primary); font-size: 1.3rem;" class="lang-ar">محرك التنبؤ والتحليل الذكي للمستقبل (AI Future Trends)</h3>
+                        <h3 style="margin: 0; color: var(--primary); font-size: 1.3rem;" class="lang-en">AI Future Trends & Predictions Engine</h3>
+                        <span style="background: rgba(46, 204, 113, 0.12); color: #27ae60; font-size: 0.75rem; font-weight: bold; padding: 2px 10px; border-radius: 20px; border: 1px solid rgba(46, 204, 113, 0.25);">
+                            ✨ خاص بالطلاب فقط
+                        </span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                        <span style="background: rgba(30, 61, 115, 0.08); color: var(--primary); font-size: 0.82rem; font-weight: bold; padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(30, 61, 115, 0.15);">
+                            🎓 قسمك وتخصصك: <strong>{{ Auth::user()->department ?: 'تقنية معلومات' }}</strong>
+                        </span>
+                        <span style="color: var(--text-secondary); font-size: 0.82rem;" class="lang-ar">يقترح مشاريع تخرج وبحوث علمية وتطبيقية مخصصة لقسمك بناءً على حاجة سوق العمل.</span>
+                        <span style="color: var(--text-secondary); font-size: 0.82rem;" class="lang-en">Suggests graduation projects & research tailored to your academic department.</span>
+                    </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="generateAIPredictions()" id="predict-btn" style="padding: 10px 20px; font-size: 0.9rem; border-radius: 30px; display: inline-flex; align-items: center; gap: 8px;">
+            <button type="button" class="btn btn-primary" onclick="generateAIPredictions()" id="predict-btn" style="padding: 11px 24px; font-size: 0.92rem; border-radius: 30px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(30,61,115,0.25); transition: all 0.3s ease;">
                 <span>🧠</span>
-                <span class="lang-ar">توليد التوقعات الذكية للسنة القادمة</span>
-                <span class="lang-en">Generate Future AI Predictions</span>
+                <span class="lang-ar">اقتراح مشاريع وبحوث لقسم ({{ Auth::user()->department ?: 'تخصصي' }})</span>
+                <span class="lang-en">Suggest Projects & Research for ({{ Auth::user()->department ?: 'My Major' }})</span>
             </button>
         </div>
 
         <!-- Result Container -->
-        <div id="ai-prediction-box" style="background: rgba(255,255,255,0.4); border: 1px solid rgba(30,61,115,0.06); border-radius: 12px; padding: 25px; min-height: 100px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+        <div id="ai-prediction-box" style="background: rgba(255,255,255,0.5); border: 1px solid rgba(30,61,115,0.08); border-radius: 12px; padding: 25px; min-height: 100px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
             <div id="ai-prediction-placeholder" style="text-align: center; color: var(--text-secondary);">
-                <p class="lang-ar" style="margin: 0; font-size: 0.95rem;">اضغط على الزر أعلاه لتشغيل نموذج الذكاء الاصطناعي وتحليل توجهات سوق العمل للمشاريع القادمة.</p>
-                <p class="lang-en" style="margin: 0; font-size: 0.95rem;">Click the button above to run the AI model and predict next year's graduation project trends.</p>
+                <p class="lang-ar" style="margin: 0; font-size: 0.95rem;">
+                    اضغط على الزر أعلاه لتشغيل محرك الذكاء الاصطناعي واستخراج مقترحات مشاريع تخرج وبحوث علمية وتطبيقية حديثة مخصصة لقسم <strong>{{ Auth::user()->department ?: 'تخصصك' }}</strong>.
+                </p>
+                <p class="lang-en" style="margin: 0; font-size: 0.95rem;">
+                    Click the button above to run the AI engine and suggest graduation projects and research theses tailored to <strong>{{ Auth::user()->department ?: 'your department' }}</strong>.
+                </p>
             </div>
             
             <div id="ai-prediction-loading" style="display: none; text-align: center; color: var(--primary); font-weight: bold; flex-direction: column; align-items: center; gap: 15px;">
-                <div style="width: 40px; height: 40px; border: 4px solid rgba(30,61,115,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear;"></div>
+                <div style="width: 42px; height: 42px; border: 4px solid rgba(30,61,115,0.15); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s infinite linear;"></div>
                 <div>
-                    <span class="lang-ar">جاري استدعاء نموذج الذكاء الاصطناعي وتحليل قاعدة البيانات وسوق العمل...</span>
-                    <span class="lang-en">Calling AI model and analyzing database & market trends...</span>
+                    <span class="lang-ar">جاري استدعاء نموذج الذكاء الاصطناعي وتحليل تخصص ({{ Auth::user()->department ?: 'تخصصك' }}) وسوق العمل لاقتراح أفضل المشاريع والبحوث...</span>
+                    <span class="lang-en">Calling AI model and analyzing {{ Auth::user()->department ?: 'your department' }} & market trends to suggest projects and research...</span>
                 </div>
             </div>
 
-            <div id="ai-prediction-text" style="display: none; width: 100%; text-align: right; font-size: 0.95rem; line-height: 1.7; color: var(--text-primary);">
+            <div id="ai-prediction-text" style="display: none; width: 100%; text-align: right; font-size: 0.95rem; line-height: 1.8; color: var(--text-primary);">
             </div>
         </div>
     </div>
-    @endauth
+    @endif
 
     <!-- Dashboard Main Sections -->
     <div class="dashboard-sections">

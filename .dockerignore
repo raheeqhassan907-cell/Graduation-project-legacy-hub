@@ -1,0 +1,14 @@
+.git
+.gitignore
+.editorconfig
+.npmrc
+.phpunit.result.cache
+node_modules
+npm-debug.log
+yarn-error.log
+tests
+scratch
+phpunit.xml
+vite.config.js
+*.bat
+*.md
